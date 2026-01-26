@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Hackers</title>
+  <style>
+    /* Splash Screen CSS */
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #ff69b4, #ffe68b, #8bc34a, #03a9f4);
+      background-size: 400% 400%;
+      animation: gradient 10s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .loading-animation {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 10px solid #fff;
+      border-top: 10px solid #333;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Dashboard Page CSS */
+    .dashboard-page {
+      display: none;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background-color: #333;
+      color: #fff;
+    }
+
+    .input-container {
+      padding: 20px;
+    }
+
+    .input-container input {
+      width: 50%;
+      height: 30px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container button {
+      width: 20%;
+      height: 30px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .results-container {
+      padding: 20px;
+    }
+
+    .result-card {
+      background-color: #f0f0f0;
+      padding: 20px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-screen">
+    <div class="logo">
+      <img src="https://via.placeholder.com/100" alt="Silent Hackers Logo">
+    </div>
+    <div class="loading-animation">
+      <div class="loader"></div>
+    </div>
+  </div>
+  <div class="dashboard-page">
+    <div class="header">
+      <h1>Silent Hackers</h1>
+      <img src="https://via.placeholder.com/100" alt="Silent Hackers Logo" class="logo">
+    </div>
+    <div class="input-container">
+      <input type="text" id="input" placeholder="Search...">
+      <button onclick="search()">Search</button>
+    </div>
+    <div class="results-container" id="results"></div>
+  </div>
+
+  <script>
+    // JavaScript Code
+    setTimeout(() => {
+      document.querySelector('.splash-screen').style.display = 'none';
+      document.querySelector('.dashboard-page').style.display = 'block';
+    }, 5000);
+
+    function search() {
+      const inputValue = document.querySelector('#input').value;
+      const apiUrl = `https://hs-sim-database-api.vercel.app/api/lookup?query=${inputValue}`;
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const resultsHtml = data.results.map(result => {
+            return `
+              <div class="result-card">
+                <h2>${result.name}</h2>
+                <p>Mobile: ${result.mobile}</p>
+                <p>CNIC: ${result.cnic}</p>
+                <p>Address: ${result.address}</p>
+              </div>
+            `;
+          }).join('');
+          document.querySelector('#results').innerHTML = resultsHtml;
+        })
+        .catch(error => console.error(error));
+    }
+  </script>
+</body>
+</html>
